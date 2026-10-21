@@ -127,3 +127,46 @@ clip-path: inset(0 0 0 12%);
 
 }
 
+
+/* =================================
+   SCREEN 2: GAMEPLAY
+================================= */
+
+#game-screen {
+  min-height: 100vh;
+  background-color: #1a1a1a;
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+/* Keep gameplay hidden until Start */
+#game-screen[hidden] {
+  display: none;
+}
+
+/* Scoreboard */
+.scoreboard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 900px;
+  margin: 0 auto 25px;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* Main Playing Field */
+#game-board {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  height: 450px;
+  margin: 0 auto;
+  background-color: #8db1cb;
+  border: 4px solid #ffc907;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+

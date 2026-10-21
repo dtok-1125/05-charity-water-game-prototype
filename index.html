@@ -52,6 +52,46 @@
       START JOURNEY
     </button>
   </section>
+
+<!-- SCREEN 2: GAME BOARD -->
+<section id="game-screen" hidden>
+
+  <!-- Scoreboard -->
+  <div class="scoreboard">
+    <p>⏱️ TIME: <span id="timer">1:00</span></p>
+    <p>💛 DELIVERIES: <span id="deliveries">0</span></p>
+  </div>
+
+  <!-- Playing Field -->
+  <div id="game-board">
+
+    <div id="community">🏠 COMMUNITY</div>
+
+    <div id="player" aria-label="Player"></div>
+
+    <div class="obstacle obstacle-1"></div>
+    <div class="obstacle obstacle-2"></div>
+    <div class="obstacle obstacle-3"></div>
+    <div class="obstacle obstacle-4"></div>
+    <div class="obstacle obstacle-5"></div>
+
+    <div id="water-source">💛 WATER SOURCE</div>
+
+  </div>
+
+  <!-- Player Instructions -->
+  <div class="game-controls">
+    <p>← ↑ ↓ →</p>
+    <p>PLAYER CONTROLS</p>
+  </div>
+
+  <!-- Game Feedback -->
+  <p id="game-feedback" role="status" aria-live="polite">
+    Collect water to begin your journey!
+  </p>
+
+</section>
+
 </main>
 
     <script src="script.js"></script>
