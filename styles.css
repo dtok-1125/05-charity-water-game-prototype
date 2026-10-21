@@ -170,3 +170,76 @@ clip-path: inset(0 0 0 12%);
 }
 
 
+/* Player: Our water delivery hero */
+#player {
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  background-color: #ffc907;
+  border: 3px solid #1a1a1a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+/* Clean Water Source */
+#water-source {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  font-size: 38px;
+}
+
+/* Community Delivery Zone */
+#community {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  font-size: 38px;
+}
+
+/* Obstacles */
+.obstacle {
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  background-color: #f5402c;
+  border: 3px solid #1a1a1a;
+  border-radius: 10px;
+}
+
+
+/* Individual Obstacle Positions */
+.obstacle-1 {
+  top: 20%;
+  left: 25%;
+}
+
+.obstacle-2 {
+  top: 55%;
+  left: 15%;
+}
+
+.obstacle-3 {
+  top: 35%;
+  left: 50%;
+}
+
+.obstacle-4 {
+  top: 70%;
+  left: 65%;
+}
+
+.obstacle-5 {
+  top: 15%;
+  left: 75%;
+}
+
+
+
