@@ -23,10 +23,16 @@ function startTimer() {
     }
 
     if (timeRemaining === 0) {
-      clearInterval(timerInterval);
-      timerInterval = null;
-      gameScreen.hidden = true;
-      alert("Time's up! Great job delivering water!");
+  clearInterval(timerInterval);
+  timerInterval = null;
+  gameScreen.hidden = true;
+
+  if (deliveries > 0) {
+    alert(`Time's up! You delivered ${deliveries} water supplies to the community!`);
+  } else {
+    alert("Time's up! Every journey begins with a single step. Try again!");
+  }
+
     }
   }, 1000);
 }
