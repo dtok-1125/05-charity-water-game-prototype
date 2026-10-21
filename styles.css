@@ -241,5 +241,11 @@ clip-path: inset(0 0 0 12%);
   left: 75%;
 }
 
+/* Make sure hidden screens stay hidden */
+#welcome-screen[hidden],
+#game-screen[hidden] {
+  display: none;
+}
+
 
 
