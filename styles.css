@@ -13,3 +13,117 @@ Secondary Colors:
 - Pink:       #F16061
 
 */
+
+
+/* Every Drop Counts - Brand Colors */
+:root {
+  --yellow: #FFC907;
+  --navy: #003366;
+  --blue: #77A8BB;
+  --cream: #FFF7E1;
+  --charcoal: #1A1A1A;
+  --peach: #FED8C1;
+  --white: #FFFFFF;
+}
+
+/* General Page Styling */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--charcoal);
+  color: var(--white);
+  font-family: Arial, sans-serif;
+}
+
+/* Welcome Screen */
+#welcome-screen {
+  min-height: 100vh;
+  padding: 50px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.brand-name {
+  font-family: Georgia, serif;
+  font-size: 28px;
+  letter-spacing: 5px;
+  margin-bottom: 60px;
+}
+
+#welcome-screen h1 {
+  font-size: clamp(32px, 5vw, 56px);
+  margin: 0 0 20px;
+}
+
+.water-drops {
+  font-size: 32px;
+  margin: 0 0 35px;
+}
+
+.game-description {
+  font-size: clamp(20px, 3vw, 30px);
+  max-width: 650px;
+  margin-bottom: 35px;
+}
+
+#welcome-screen h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+#welcome-screen p {
+  line-height: 1.6;
+}
+
+#start-button {
+  background-color: var(--yellow);
+  color: var(--charcoal);
+  border: none;
+  border-radius: 5px;
+  padding: 18px 35px;
+  margin-top: 30px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#start-button:hover {
+  background-color: var(--cream);
+}
+
+#start-button:focus-visible {
+  outline: 3px solid var(--white);
+  outline-offset: 4px;
+}
+
+/* Charity: water official logo */
+.logo-container {
+  position: relative;
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto 60px;
+}
+
+.brand-logo {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Turn only the lettering white */
+.logo-white {
+  position: absolute;
+  top: 0;
+  left: 0;
+  filter: brightness(0) invert(1);
+ 
+clip-path: inset(0 0 0 12%);
+
+}
+
