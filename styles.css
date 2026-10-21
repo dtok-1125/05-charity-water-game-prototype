@@ -182,8 +182,8 @@ clip-path: inset(0 0 0 12%);
   align-items: center;
   justify-content: center;
   font-size: 24px;
-  left: 50%;
-  top: 50%;
+  left: 85%;
+  top: 85%;
   transform: translate(-50%, -50%);
   z-index: 2;
 }

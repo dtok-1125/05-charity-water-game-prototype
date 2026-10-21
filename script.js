@@ -32,8 +32,8 @@ const player = document.getElementById("player");
 const gameBoard = document.getElementById("game-board");
 
 // Player starting position
-let playerX = 50;
-let playerY = 50;
+let playerX = 85;
+let playerY = 85;
 
 // Movement speed (percentage per key press)
 const playerSpeed = 2;
