@@ -1,5 +1,35 @@
 // Log a message to the console to ensure the script is linked correctly
 console.log('JavaScript file is linked correctly.');
+// ==============================
+// GAME TIMER
+// ==============================
+
+const timerDisplay = document.getElementById("timer");
+
+let timeRemaining = 60;
+let timerInterval = null;
+function startTimer() {
+  if (timerInterval !== null) return;
+
+  timerInterval = setInterval(function () {
+    if (timeRemaining > 0) {
+      timeRemaining--;
+
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+
+      timerDisplay.textContent =
+        `${minutes}:${String(seconds).padStart(2, "0")}`;
+    }
+
+    if (timeRemaining === 0) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      gameScreen.hidden = true;
+      alert("Time's up! Great job delivering water!");
+    }
+  }, 1000);
+}
 
 
 /* =================================
@@ -19,6 +49,7 @@ startButton.addEventListener("click", function () {
 
   // Show the gameplay screen
   gameScreen.hidden = false;
+  startTimer();
 
   console.log("Journey started!");
 
