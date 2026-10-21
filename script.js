@@ -99,8 +99,9 @@ document.addEventListener("keydown", function (event) {
   player.style.left = playerX + "%";
   player.style.top = playerY + "%";
 
-  checkWaterCollection();
-  checkWaterDelivery();
+checkWaterCollection();
+checkWaterDelivery();
+checkObstacleCollision();
 
 });
 
@@ -114,6 +115,16 @@ const community = document.getElementById("community");
 const deliveriesDisplay = document.getElementById("deliveries");
 
 let deliveries = 0;
+
+// ==============================
+// OBSTACLE COLLISION
+// ==============================
+
+// Find all five obstacles
+const obstacles = document.querySelectorAll(".obstacle");
+
+// Prevent repeated penalties from one collision
+let obstacleCooldown = false;
 
 // Is the player carrying water?
 let carryingWater = false;
@@ -172,6 +183,38 @@ function checkWaterDelivery() {
       "💛 Water delivered! Your community thanks you!";
 
     console.log("Delivery completed!");
+  }
+}
+function checkObstacleCollision() {
+  // Ignore collisions while the cooldown is active
+  if (obstacleCooldown || timeRemaining <= 0) return;
+
+  for (const obstacle of obstacles) {
+    if (isTouching(player, obstacle)) {
+
+      // Deduct 5 seconds without going below zero
+      timeRemaining = Math.max(0, timeRemaining - 5);
+
+      // Update the timer immediately
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+
+      timerDisplay.textContent =
+        `${minutes}:${String(seconds).padStart(2, "0")}`;
+
+      // Warn the player
+      gameFeedback.textContent =
+        "🚧 Ouch! Obstacle hit! You lost 5 seconds!";
+
+      // Activate cooldown
+      obstacleCooldown = true;
+
+      setTimeout(function () {
+        obstacleCooldown = false;
+      }, 1000);
+
+      break;
+    }
   }
 }
 
