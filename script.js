@@ -69,6 +69,7 @@ document.addEventListener("keydown", function (event) {
   player.style.top = playerY + "%";
 
   checkWaterCollection();
+  checkWaterDelivery();
 
 });
 
@@ -78,6 +79,10 @@ document.addEventListener("keydown", function (event) {
 
 const waterSource = document.getElementById("water-source");
 const gameFeedback = document.getElementById("game-feedback");
+const community = document.getElementById("community");
+const deliveriesDisplay = document.getElementById("deliveries");
+
+let deliveries = 0;
 
 // Is the player carrying water?
 let carryingWater = false;
@@ -113,6 +118,29 @@ function checkWaterCollection() {
       "💧 Water collected! Deliver it to the community!";
 
     console.log("Water collected!");
+  }
+}
+// Deliver water when the player returns to the community
+function checkWaterDelivery() {
+
+  // Only deliver if carrying water
+  if (!carryingWater) return;
+
+  if (isTouching(player, community)) {
+    deliveries++;
+    deliveriesDisplay.textContent = deliveries;
+
+    carryingWater = false;
+
+    // Return player to original appearance
+    player.textContent = "";
+    player.style.backgroundColor = "#FFCC00";
+
+    // Celebrate successful delivery
+    gameFeedback.textContent =
+      "💛 Water delivered! Your community thanks you!";
+
+    console.log("Delivery completed!");
   }
 }
 
