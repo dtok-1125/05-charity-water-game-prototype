@@ -163,7 +163,7 @@ const gameBoard = document.getElementById("game-board");
 
 // Player starting position
 let playerX = 85;
-let playerY = 85;
+let playerY = 80;
 
 // Movement speed (percentage per key press)
 const playerSpeed = 2;
@@ -243,11 +243,10 @@ function resetGame() {
   obstaclesInContact.clear();
 
   playerX = 85;
-  playerY = 85;
+  playerY = 80;
   player.style.left = `${playerX}%`;
   player.style.top = `${playerY}%`;
-  player.textContent = "";
-  player.style.backgroundColor = "#FFCC00";
+  player.classList.remove("is-full");
 
   updateTimerDisplay();
   deliveriesDisplay.textContent = deliveries;
@@ -310,9 +309,8 @@ function checkWaterCollection() {
   if (isTouching(player, waterSource)) {
     carryingWater = true;
 
-    // Visual feedback
-    player.textContent = "💧";
-    player.style.backgroundColor = "#2E9DF7";
+    // Show that the can is full.
+    player.classList.add("is-full");
 
     // Written feedback
     gameFeedback.textContent =
@@ -333,9 +331,8 @@ function checkWaterDelivery() {
 
     carryingWater = false;
 
-    // Return player to original appearance
-    player.textContent = "";
-    player.style.backgroundColor = "#FFCC00";
+    // Show that the can is empty again.
+    player.classList.remove("is-full");
 
     // Celebrate successful delivery
     gameFeedback.textContent =
