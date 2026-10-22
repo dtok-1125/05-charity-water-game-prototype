@@ -203,6 +203,11 @@ clip-path: inset(0 0 0 12%);
   right: 30px;
   font-size: 38px;
 }
+/* Community House */
+#community-house {
+  display: inline-block;
+  font-size: 38px;
+}
 
 /* Obstacles */
 .obstacle {

@@ -144,14 +144,47 @@ let carryingWater = false;
 
 // Check whether two elements overlap
 function isTouching(element1, element2) {
-  const rect1 = element1.getBoundingClientRect();
-  const rect2 = element2.getBoundingClientRect();
+  const circle = element1.getBoundingClientRect();
+  const rectangle = element2.getBoundingClientRect();
+
+  // Find the center of the player
+  const centerX = circle.left + circle.width / 2;
+  const centerY = circle.top + circle.height / 2;
+  const radius = Math.min(circle.width, circle.height) / 2;
+
+  // Find the closest point on the obstacle
+  const closestX = Math.max(
+    rectangle.left,
+    Math.min(centerX, rectangle.right)
+  );
+  const closestY = Math.max(
+    rectangle.top,
+    Math.min(centerY, rectangle.bottom)
+  );
+
+  // Calculate the distance
+  const distanceX = centerX - closestX;
+  const distanceY = centerY - closestY;
 
   return (
-    rect1.left < rect2.right &&
-    rect1.right > rect2.left &&
-    rect1.top < rect2.bottom &&
-    rect1.bottom > rect2.top
+    distanceX * distanceX + distanceY * distanceY <=
+    radius * radius
+  );
+}
+
+function isTouchingObstacle(player, obstacle) {
+  console.log("Checking obstacle collision!");
+
+  const rect1 = player.getBoundingClientRect();
+  const rect2 = obstacle.getBoundingClientRect();
+
+  const padding = 2;
+
+  return (
+    rect1.left + padding < rect2.right - padding &&
+    rect1.right - padding > rect2.left + padding &&
+    rect1.top + padding < rect2.bottom - padding &&
+    rect1.bottom - padding > rect2.top + padding
   );
 }
 
@@ -181,7 +214,7 @@ function checkWaterDelivery() {
   // Only deliver if carrying water
   if (!carryingWater) return;
 
-  if (isTouching(player, community)) {
+  if (isTouching(player, document.getElementById("community-house"))) {
     deliveries++;
     deliveriesDisplay.textContent = deliveries;
 
@@ -203,7 +236,7 @@ function checkObstacleCollision() {
   if (obstacleCooldown || timeRemaining <= 0) return;
 
   for (const obstacle of obstacles) {
-    if (isTouching(player, obstacle)) {
+    if (isTouchingObstacle(player, obstacle)) {
 
       // Deduct 5 seconds without going below zero
       timeRemaining = Math.max(0, timeRemaining - 5);
@@ -244,4 +277,3 @@ function checkObstacleCollision() {
 restartButton.addEventListener("click", function () {
   window.location.reload();
 });
-
