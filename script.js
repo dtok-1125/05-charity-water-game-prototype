@@ -6,6 +6,7 @@ console.log('JavaScript file is linked correctly.');
 
 const timerDisplay = document.getElementById("timer");
 const restartButton = document.getElementById("restart-button");
+const resultsDetails = document.getElementById("results-details");
 const gameOverlay = document.getElementById("game-overlay");
 const confettiLayer = document.getElementById("confetti-layer");
 const overlayTitle = document.getElementById("overlay-title");
@@ -33,26 +34,55 @@ function showConfetti() {
   confettiLayer.hidden = false;
 
   const colors = ["#FFC907", "#77A8BB", "#FFFFFF", "#003366"];
+  const pieceCount = 360;
+  const piecesPerSide = pieceCount / 2;
+  const boardBounds = gameBoard.getBoundingClientRect();
 
-  for (let index = 0; index < 48; index++) {
+  for (let index = 0; index < pieceCount; index++) {
     const piece = document.createElement("span");
-    const startsOnLeft = index < 24;
-    const drift = Math.random() * 25 + 8;
+    const startsOnLeft = index < piecesPerSide;
+    const edgeInset = Math.random() * boardBounds.width * 0.08;
+    const originX = startsOnLeft
+      ? boardBounds.left + edgeInset
+      : boardBounds.right - edgeInset;
+    const originY = boardBounds.bottom - Math.random() * 24;
+    const centerSpread = (Math.random() - 0.5) * boardBounds.width * 0.4;
+    const launchTargetX = window.innerWidth / 2 + centerSpread;
+    const launchX = launchTargetX - originX;
+    const launchY = -boardBounds.height * (0.55 + Math.random() * 0.45);
+    const fallX = launchX + (Math.random() - 0.5) * boardBounds.width * 0.22;
+    const fallEndY = Math.max(
+      originY + 20,
+      Math.min(
+        window.innerHeight * 0.9,
+        boardBounds.bottom + window.innerHeight * (0.18 + Math.random() * 0.16)
+      )
+    );
+    const fallY = fallEndY - originY;
+    const spinDirection = Math.random() < 0.5 ? -1 : 1;
+    const spinDegrees = spinDirection * (360 + Math.random() * 180);
 
     piece.className = "confetti-piece";
-    piece.style.left = startsOnLeft ? `${Math.random() * 8}vw` : "";
-    piece.style.right = startsOnLeft ? "" : `${Math.random() * 8}vw`;
+    piece.style.left = `${originX}px`;
+    piece.style.top = `${originY}px`;
     piece.style.setProperty("--confetti-color", colors[index % colors.length]);
-    piece.style.setProperty("--confetti-top", `${Math.random() * 25}vh`);
-    piece.style.setProperty(
-      "--confetti-drift",
-      `${startsOnLeft ? drift : -drift}vw`
-    );
-    piece.style.setProperty("--confetti-delay", `${Math.random() * 0.6}s`);
+    piece.style.setProperty("--confetti-launch-x", `${launchX}px`);
+    piece.style.setProperty("--confetti-launch-y", `${launchY}px`);
+    piece.style.setProperty("--confetti-mid-x", `${(launchX + fallX) / 2}px`);
+    piece.style.setProperty("--confetti-mid-y", `${(launchY + fallY) / 2}px`);
+    piece.style.setProperty("--confetti-fall-x", `${fallX}px`);
+    piece.style.setProperty("--confetti-fall-y", `${fallY}px`);
+    piece.style.setProperty("--confetti-width", `${6 + Math.random() * 4}px`);
+    piece.style.setProperty("--confetti-height", `${10 + Math.random() * 8}px`);
+    piece.style.setProperty("--confetti-spin", `${spinDegrees}deg`);
+    piece.style.setProperty("--confetti-launch-spin", `${spinDegrees * 0.35}deg`);
+    piece.style.setProperty("--confetti-mid-spin", `${spinDegrees * 0.675}deg`);
+    piece.style.setProperty("--confetti-duration", `${7 + Math.random() * 3}s`);
+    piece.style.setProperty("--confetti-delay", `${Math.random() * 0.2}s`);
     confettiLayer.appendChild(piece);
   }
 
-  confettiTimeout = window.setTimeout(clearConfetti, 5000);
+  confettiTimeout = window.setTimeout(clearConfetti, 11000);
 }
 
 function updateTimerDisplay() {
@@ -65,6 +95,7 @@ function showOverlay(title, message, showRestartButton = false) {
   overlayTitle.textContent = title;
   overlayMessage.textContent = message;
   restartButton.hidden = !showRestartButton;
+  resultsDetails.hidden = !showRestartButton;
   gameOverlay.hidden = false;
 }
 
@@ -76,20 +107,13 @@ function endGame() {
   clearInterval(timerInterval);
   timerInterval = null;
 
-  if (deliveries > 0) {
-    showOverlay(
-      "Time's up!",
-      `You delivered ${deliveries} water ${deliveries === 1 ? "supply" : "supplies"} to the community!`,
-      true
-    );
-    showConfetti();
-  } else {
-    showOverlay(
-      "Time's up!",
-      "Every journey begins with a single step. Try again!",
-      true
-    );
-  }
+  showOverlay(
+    "Time's up! 🎉",
+    `You delivered ${deliveries} water ${deliveries === 1 ? "supply" : "supplies"} to the community!`,
+    true
+  );
+
+  if (deliveries > 0) showConfetti();
 }
 
 function startTimer() {
