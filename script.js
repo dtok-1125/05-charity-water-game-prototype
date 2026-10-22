@@ -168,27 +168,23 @@ let playerY = 80;
 // Movement speed (percentage per key press)
 const playerSpeed = 2;
 
-// Listen for arrow keys
-document.addEventListener("keydown", function (event) {
+const movementButtons = document.querySelectorAll(".arrow-key");
 
-  // Only move while the game screen is visible
+// Move the player from either the keyboard or the on-screen controls.
+function movePlayer(direction) {
   if (gameScreen.hidden || gamePaused || gameEnded) return;
 
-  // Move in the direction of the arrow key
-  if (event.key === "ArrowUp") {
+  if (direction === "up") {
     playerY -= playerSpeed;
-  } else if (event.key === "ArrowDown") {
+  } else if (direction === "down") {
     playerY += playerSpeed;
-  } else if (event.key === "ArrowLeft") {
+  } else if (direction === "left") {
     playerX -= playerSpeed;
-  } else if (event.key === "ArrowRight") {
+  } else if (direction === "right") {
     playerX += playerSpeed;
   } else {
     return;
   }
-
-  // Stop arrow keys from scrolling the page
-  event.preventDefault();
 
   // Keep player inside the game board
   playerX = Math.max(3, Math.min(97, playerX));
@@ -198,10 +194,35 @@ document.addEventListener("keydown", function (event) {
   player.style.left = playerX + "%";
   player.style.top = playerY + "%";
 
-checkWaterCollection();
-checkWaterDelivery();
-checkObstacleCollision();
+  checkWaterCollection();
+  checkWaterDelivery();
+  checkObstacleCollision();
+}
 
+movementButtons.forEach(function (button) {
+  button.addEventListener("click", function () {
+    movePlayer(button.dataset.direction);
+  });
+});
+
+// Listen for arrow keys
+document.addEventListener("keydown", function (event) {
+  // Only move while the game screen is visible
+  if (gameScreen.hidden || gamePaused || gameEnded) return;
+
+  const directions = {
+    ArrowUp: "up",
+    ArrowDown: "down",
+    ArrowLeft: "left",
+    ArrowRight: "right"
+  };
+  const direction = directions[event.key];
+
+  if (!direction) return;
+
+  // Stop arrow keys from scrolling the page
+  event.preventDefault();
+  movePlayer(direction);
 });
 
 /* =================================

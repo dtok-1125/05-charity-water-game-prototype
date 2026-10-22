@@ -215,12 +215,15 @@ clip-path: inset(0 0 0 12%);
   grid-template-rows: repeat(2, 36px);
   justify-content: center;
   gap: 5px;
+  touch-action: none;
 }
 
 .arrow-key {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
+  border: 0;
   border-radius: 7px;
   background-color: var(--charcoal);
   color: #FFCA0A;
@@ -228,6 +231,11 @@ clip-path: inset(0 0 0 12%);
   font-size: 24px;
   font-weight: bold;
   line-height: 1;
+  cursor: pointer;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  appearance: none;
 }
 
 .arrow-key-up {
