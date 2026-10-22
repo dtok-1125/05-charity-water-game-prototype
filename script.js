@@ -7,14 +7,53 @@ console.log('JavaScript file is linked correctly.');
 const timerDisplay = document.getElementById("timer");
 const restartButton = document.getElementById("restart-button");
 const gameOverlay = document.getElementById("game-overlay");
+const confettiLayer = document.getElementById("confetti-layer");
 const overlayTitle = document.getElementById("overlay-title");
 const overlayMessage = document.getElementById("overlay-message");
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 let timeRemaining = 60;
 let timerInterval = null;
 let obstacleTimeout = null;
+let confettiTimeout = null;
 let gamePaused = false;
 let gameEnded = false;
+
+function clearConfetti() {
+  clearTimeout(confettiTimeout);
+  confettiTimeout = null;
+  confettiLayer.replaceChildren();
+  confettiLayer.hidden = true;
+}
+
+function showConfetti() {
+  if (prefersReducedMotion.matches) return;
+
+  clearConfetti();
+  confettiLayer.hidden = false;
+
+  const colors = ["#FFC907", "#77A8BB", "#FFFFFF", "#003366"];
+
+  for (let index = 0; index < 48; index++) {
+    const piece = document.createElement("span");
+    const startsOnLeft = index < 24;
+    const drift = Math.random() * 25 + 8;
+
+    piece.className = "confetti-piece";
+    piece.style.left = startsOnLeft ? `${Math.random() * 8}vw` : "";
+    piece.style.right = startsOnLeft ? "" : `${Math.random() * 8}vw`;
+    piece.style.setProperty("--confetti-color", colors[index % colors.length]);
+    piece.style.setProperty("--confetti-top", `${Math.random() * 25}vh`);
+    piece.style.setProperty(
+      "--confetti-drift",
+      `${startsOnLeft ? drift : -drift}vw`
+    );
+    piece.style.setProperty("--confetti-delay", `${Math.random() * 0.6}s`);
+    confettiLayer.appendChild(piece);
+  }
+
+  confettiTimeout = window.setTimeout(clearConfetti, 5000);
+}
 
 function updateTimerDisplay() {
   const minutes = Math.floor(timeRemaining / 60);
@@ -43,6 +82,7 @@ function endGame() {
       `You delivered ${deliveries} water ${deliveries === 1 ? "supply" : "supplies"} to the community!`,
       true
     );
+    showConfetti();
   } else {
     showOverlay(
       "Time's up!",
@@ -169,6 +209,7 @@ function resetGame() {
   timerInterval = null;
   clearTimeout(obstacleTimeout);
   obstacleTimeout = null;
+  clearConfetti();
 
   timeRemaining = 60;
   gamePaused = false;
