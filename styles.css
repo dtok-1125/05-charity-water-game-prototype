@@ -463,22 +463,24 @@ clip-path: inset(0 0 0 12%);
 /* Clean Water Source */
 #water-source {
   position: absolute;
-  top: 30px;
-  left: 30px;
-  font-size: clamp(14px, 2.4vw, 22px);
+  top: clamp(12px, 2vw, 30px);
+  left: clamp(12px, 2vw, 30px);
+  font-size: clamp(11px, calc(1.25vw + 7px), 19px);
+  white-space: nowrap;
 }
 
 /* Community Delivery Zone */
 #community {
   position: absolute;
-  bottom: 30px;
-  right: 30px;
-  font-size: clamp(12px, 1.8vw, 18px);
+  bottom: clamp(12px, 2vw, 30px);
+  right: clamp(12px, 2vw, 30px);
+  font-size: clamp(11px, calc(1.25vw + 7px), 19px);
+  white-space: nowrap;
 }
 /* Community House */
 #community-house {
   display: inline-block;
-  font-size: clamp(28px, 3.4vw, 38px);
+  font-size: 1em;
 }
 
 /* Obstacles */
@@ -509,13 +511,23 @@ clip-path: inset(0 0 0 12%);
 }
 
 .obstacle-4 {
-  top: 70%;
+  top: 55%;
   left: 65%;
 }
 
 .obstacle-5 {
   top: 15%;
   left: 75%;
+}
+
+.obstacle-6 {
+  top: 72%;
+  left: 35%;
+}
+
+.obstacle-7 {
+  top: 42%;
+  left: 84%;
 }
 
 /* Make sure hidden screens stay hidden */
@@ -530,22 +542,6 @@ clip-path: inset(0 0 0 12%);
 @media (max-width: 480px) {
   #game-screen {
     padding: 16px 14px 20px;
-  }
-
-  #water-source {
-    top: 18px;
-    left: 18px;
-    font-size: clamp(13px, 3.8vw, 18px);
-  }
-
-  #community {
-    right: 18px;
-    bottom: 18px;
-    font-size: clamp(11px, 3vw, 14px);
-  }
-
-  #community-house {
-    font-size: clamp(24px, 7vw, 32px);
   }
 
   .game-controls {

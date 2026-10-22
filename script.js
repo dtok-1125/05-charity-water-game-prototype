@@ -219,7 +219,7 @@ let deliveries = 0;
 // OBSTACLE COLLISION
 // ==============================
 
-// Find all five obstacles
+// Find all obstacles
 const obstacles = document.querySelectorAll(".obstacle");
 
 // Track obstacles the player is still touching to prevent repeat penalties.
