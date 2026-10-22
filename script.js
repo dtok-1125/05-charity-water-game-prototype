@@ -5,41 +5,63 @@ console.log('JavaScript file is linked correctly.');
 // ==============================
 
 const timerDisplay = document.getElementById("timer");
-
 const restartButton = document.getElementById("restart-button");
-
+const gameOverlay = document.getElementById("game-overlay");
+const overlayTitle = document.getElementById("overlay-title");
+const overlayMessage = document.getElementById("overlay-message");
 
 let timeRemaining = 60;
 let timerInterval = null;
-function startTimer() {
-  if (timerInterval !== null) return;
+let gamePaused = false;
+let gameEnded = false;
 
-  timerInterval = setInterval(function () {
-    if (timeRemaining > 0) {
-      timeRemaining--;
+function updateTimerDisplay() {
+  const minutes = Math.floor(timeRemaining / 60);
+  const seconds = timeRemaining % 60;
+  timerDisplay.textContent = `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
 
-      const minutes = Math.floor(timeRemaining / 60);
-      const seconds = timeRemaining % 60;
+function showOverlay(title, message, showRestartButton = false) {
+  overlayTitle.textContent = title;
+  overlayMessage.textContent = message;
+  restartButton.hidden = !showRestartButton;
+  gameOverlay.hidden = false;
+}
 
-      timerDisplay.textContent =
-        `${minutes}:${String(seconds).padStart(2, "0")}`;
+function endGame() {
+  if (gameEnded) return;
 
-
-    }
-
-    if (timeRemaining === 0) {
+  gameEnded = true;
+  gamePaused = false;
   clearInterval(timerInterval);
   timerInterval = null;
-  
-  restartButton.hidden = false;
-
 
   if (deliveries > 0) {
-    alert(`Time's up! You delivered ${deliveries} water supplies to the community!`);
+    showOverlay(
+      "Time's up!",
+      `You delivered ${deliveries} water ${deliveries === 1 ? "supply" : "supplies"} to the community!`,
+      true
+    );
   } else {
-    alert("Time's up! Every journey begins with a single step. Try again!");
+    showOverlay(
+      "Time's up!",
+      "Every journey begins with a single step. Try again!",
+      true
+    );
   }
+}
 
+function startTimer() {
+  if (timerInterval !== null || gamePaused || gameEnded) return;
+
+  timerInterval = setInterval(function () {
+    if (gamePaused || gameEnded) return;
+
+    timeRemaining = Math.max(0, timeRemaining - 1);
+    updateTimerDisplay();
+
+    if (timeRemaining === 0) {
+      endGame();
     }
   }, 1000);
 }
@@ -86,7 +108,7 @@ const playerSpeed = 2;
 document.addEventListener("keydown", function (event) {
 
   // Only move while the game screen is visible
-  if (gameScreen.hidden) return;
+  if (gameScreen.hidden || gamePaused || gameEnded) return;
 
   // Move in the direction of the arrow key
   if (event.key === "ArrowUp") {
@@ -136,8 +158,8 @@ let deliveries = 0;
 // Find all five obstacles
 const obstacles = document.querySelectorAll(".obstacle");
 
-// Prevent repeated penalties from one collision
-let obstacleCooldown = false;
+// Track obstacles the player is still touching to prevent repeat penalties.
+const obstaclesInContact = new Set();
 
 // Is the player carrying water?
 let carryingWater = false;
@@ -232,41 +254,51 @@ function checkWaterDelivery() {
   }
 }
 function checkObstacleCollision() {
-  // Ignore collisions while the cooldown is active
-  if (obstacleCooldown || timeRemaining <= 0) return;
+  if (gamePaused || gameEnded || timeRemaining <= 0) return;
+
+  const touchingObstacles = [];
 
   for (const obstacle of obstacles) {
     if (isTouchingObstacle(player, obstacle)) {
-
-      // Deduct 5 seconds without going below zero
-      timeRemaining = Math.max(0, timeRemaining - 5);
-
-      // Update the timer immediately
-      const minutes = Math.floor(timeRemaining / 60);
-      const seconds = timeRemaining % 60;
-
-      timerDisplay.textContent =
-        `${minutes}:${String(seconds).padStart(2, "0")}`;
-
-
-
-
-
-
-
-      // Warn the player
-      gameFeedback.textContent =
-        "🚧 Ouch! Obstacle hit! You lost 5 seconds!";
-
-      // Activate cooldown
-      obstacleCooldown = true;
-
-      setTimeout(function () {
-        obstacleCooldown = false;
-      }, 1000);
-
-      break;
+      touchingObstacles.push(obstacle);
     }
+  }
+
+  for (const obstacle of obstaclesInContact) {
+    if (!touchingObstacles.includes(obstacle)) {
+      obstaclesInContact.delete(obstacle);
+    }
+  }
+
+  const newlyTouchedObstacle = touchingObstacles.find(
+    (obstacle) => !obstaclesInContact.has(obstacle)
+  );
+
+  if (newlyTouchedObstacle) {
+    obstaclesInContact.add(newlyTouchedObstacle);
+
+    // Deduct five seconds without allowing the timer to go below zero.
+    timeRemaining = Math.max(0, timeRemaining - 5);
+    updateTimerDisplay();
+
+    gamePaused = true;
+    clearInterval(timerInterval);
+    timerInterval = null;
+    const message = "🚧 Ouch! Obstacle hit! You lost 5 seconds!";
+    gameFeedback.textContent = message;
+    showOverlay("Obstacle!", message);
+
+    window.setTimeout(function () {
+      gameOverlay.hidden = true;
+
+      if (timeRemaining === 0) {
+        endGame();
+      } else {
+        gamePaused = false;
+        startTimer();
+      }
+    }, 1500);
+
   }
 }
 

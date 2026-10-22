@@ -169,6 +169,92 @@ clip-path: inset(0 0 0 12%);
   overflow: hidden;
 }
 
+/* Centered feedback and results overlay */
+.game-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgb(0 0 0 / 75%);
+}
+
+.game-overlay[hidden] {
+  display: none;
+}
+
+.overlay-message {
+  width: min(100%, 420px);
+  max-height: calc(100vh - 32px);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  padding: clamp(22px, 6vw, 36px);
+  border: 3px solid var(--yellow);
+  border-radius: 18px;
+  background-color: var(--charcoal);
+  color: var(--white);
+  text-align: center;
+  box-shadow: 0 12px 40px rgb(0 0 0 / 35%);
+  animation: overlay-entrance 180ms ease-out;
+}
+
+.overlay-message h2 {
+  margin: 0 0 14px;
+  color: var(--yellow);
+  font-size: clamp(22px, 6vw, 30px);
+}
+
+.overlay-message p {
+  margin: 0;
+  font-size: clamp(16px, 4.5vw, 20px);
+  line-height: 1.5;
+}
+
+#restart-button {
+  margin-top: 24px;
+  padding: 14px 24px;
+  border: 0;
+  border-radius: 7px;
+  background-color: var(--yellow);
+  color: var(--charcoal);
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#restart-button:hover {
+  background-color: var(--cream);
+}
+
+#restart-button:focus-visible {
+  outline: 3px solid var(--white);
+  outline-offset: 4px;
+}
+
+#restart-button[hidden] {
+  display: none;
+}
+
+@keyframes overlay-entrance {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay-message {
+    animation: none;
+  }
+}
+
 
 /* Player: Our water delivery hero */
 #player {
@@ -295,7 +381,6 @@ clip-path: inset(0 0 0 12%);
     padding: 12px 28px;
   }
 }
-
 
 
 

@@ -93,14 +93,17 @@
     Collect water to begin your journey!
   </p>
 
-<!-- Restart button -->
-<button id="restart-button" type="button" hidden>
-  🔄 Play Again
-</button>
-
 </section>
 
 </main>
+
+<div id="game-overlay" class="game-overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title" hidden>
+  <div class="overlay-message">
+    <h2 id="overlay-title"></h2>
+    <p id="overlay-message"></p>
+    <button id="restart-button" type="button" hidden>PLAY AGAIN</button>
+  </div>
+</div>
 
     <script src="script.js"></script>
 </body>
