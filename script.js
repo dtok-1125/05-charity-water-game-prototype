@@ -12,6 +12,7 @@ const overlayMessage = document.getElementById("overlay-message");
 
 let timeRemaining = 60;
 let timerInterval = null;
+let obstacleTimeout = null;
 let gamePaused = false;
 let gameEnded = false;
 
@@ -76,18 +77,17 @@ const startButton = document.getElementById("start-button");
 const welcomeScreen = document.getElementById("welcome-screen");
 const gameScreen = document.getElementById("game-screen");
 
-// Listen for the player to click START JOURNEY
-startButton.addEventListener("click", function () {
-
-  // Hide the welcome screen
+function showGameScreen() {
   welcomeScreen.hidden = true;
-
-  // Show the gameplay screen
   gameScreen.hidden = false;
   startTimer();
+}
+
+// Listen for the player to click START JOURNEY
+startButton.addEventListener("click", function () {
+  showGameScreen();
 
   console.log("Journey started!");
-
 });
 
 /* =================================
@@ -163,6 +163,32 @@ const obstaclesInContact = new Set();
 
 // Is the player carrying water?
 let carryingWater = false;
+
+function resetGame() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+  clearTimeout(obstacleTimeout);
+  obstacleTimeout = null;
+
+  timeRemaining = 60;
+  gamePaused = false;
+  gameEnded = false;
+  deliveries = 0;
+  carryingWater = false;
+  obstaclesInContact.clear();
+
+  playerX = 85;
+  playerY = 85;
+  player.style.left = `${playerX}%`;
+  player.style.top = `${playerY}%`;
+  player.textContent = "";
+  player.style.backgroundColor = "#FFCC00";
+
+  updateTimerDisplay();
+  deliveriesDisplay.textContent = deliveries;
+  gameFeedback.textContent = "Collect water to begin your journey!";
+  gameOverlay.hidden = true;
+}
 
 // Check whether two elements overlap
 function isTouching(element1, element2) {
@@ -288,7 +314,8 @@ function checkObstacleCollision() {
     gameFeedback.textContent = message;
     showOverlay("Obstacle!", message);
 
-    window.setTimeout(function () {
+    obstacleTimeout = window.setTimeout(function () {
+      obstacleTimeout = null;
       gameOverlay.hidden = true;
 
       if (timeRemaining === 0) {
@@ -307,5 +334,6 @@ function checkObstacleCollision() {
 ================================= */
 
 restartButton.addEventListener("click", function () {
-  window.location.reload();
+  resetGame();
+  showGameScreen();
 });
