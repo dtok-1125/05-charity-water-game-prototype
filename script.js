@@ -6,6 +6,9 @@ console.log('JavaScript file is linked correctly.');
 
 const timerDisplay = document.getElementById("timer");
 
+const restartButton = document.getElementById("restart-button");
+
+
 let timeRemaining = 60;
 let timerInterval = null;
 function startTimer() {
@@ -20,12 +23,16 @@ function startTimer() {
 
       timerDisplay.textContent =
         `${minutes}:${String(seconds).padStart(2, "0")}`;
+
+
     }
 
     if (timeRemaining === 0) {
   clearInterval(timerInterval);
   timerInterval = null;
-  gameScreen.hidden = true;
+  
+  restartButton.hidden = false;
+
 
   if (deliveries > 0) {
     alert(`Time's up! You delivered ${deliveries} water supplies to the community!`);
@@ -208,6 +215,12 @@ function checkObstacleCollision() {
       timerDisplay.textContent =
         `${minutes}:${String(seconds).padStart(2, "0")}`;
 
+
+
+
+
+
+
       // Warn the player
       gameFeedback.textContent =
         "🚧 Ouch! Obstacle hit! You lost 5 seconds!";
@@ -223,4 +236,12 @@ function checkObstacleCollision() {
     }
   }
 }
+
+/* ==============================
+   RESTART GAME
+================================= */
+
+restartButton.addEventListener("click", function () {
+  window.location.reload();
+});
 
