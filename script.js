@@ -172,6 +172,7 @@ const movementIntervalDelay = 160;
 const movementButtons = document.querySelectorAll(".arrow-key");
 let activeDirection = null;
 let movementInterval = null;
+let activePointerId = null;
 
 function stopMovement(direction) {
   if (direction && activeDirection !== direction) return;
@@ -179,6 +180,7 @@ function stopMovement(direction) {
   clearInterval(movementInterval);
   movementInterval = null;
   activeDirection = null;
+  activePointerId = null;
 }
 
 // Move the player from either the keyboard or the on-screen controls.
@@ -236,18 +238,25 @@ movementButtons.forEach(function (button) {
     button.addEventListener("pointerdown", function (event) {
       event.preventDefault();
       startMovement(button.dataset.direction);
+      if (activeDirection === button.dataset.direction) {
+        activePointerId = event.pointerId;
+      }
     });
 
-    button.addEventListener("pointerup", function () {
-      stopMovement(button.dataset.direction);
+    button.addEventListener("pointerup", function (event) {
+      if (event.pointerId === activePointerId) stopMovement();
     });
 
-    button.addEventListener("pointercancel", function () {
-      stopMovement(button.dataset.direction);
+    button.addEventListener("pointercancel", function (event) {
+      if (event.pointerId === activePointerId) stopMovement();
     });
 
-    button.addEventListener("pointerleave", function () {
-      stopMovement(button.dataset.direction);
+    button.addEventListener("lostpointercapture", function (event) {
+      if (event.pointerId === activePointerId) stopMovement();
+    });
+
+    button.addEventListener("pointerleave", function (event) {
+      if (event.pointerId === activePointerId) stopMovement();
     });
 
     button.addEventListener("click", function (event) {
@@ -261,6 +270,14 @@ movementButtons.forEach(function (button) {
       movePlayer(button.dataset.direction);
     });
   }
+});
+
+window.addEventListener("pointerup", function (event) {
+  if (event.pointerId === activePointerId) stopMovement();
+});
+
+window.addEventListener("pointercancel", function (event) {
+  if (event.pointerId === activePointerId) stopMovement();
 });
 
 window.addEventListener("blur", function () {
