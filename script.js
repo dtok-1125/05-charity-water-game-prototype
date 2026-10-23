@@ -46,11 +46,10 @@ function showConfetti() {
       ? boardBounds.left + edgeInset
       : boardBounds.right - edgeInset;
     const originY = boardBounds.bottom - Math.random() * 24;
-    const centerSpread = (Math.random() - 0.5) * boardBounds.width * 0.4;
-    const launchTargetX = window.innerWidth / 2 + centerSpread;
+    const launchTargetX = window.innerWidth * (0.1 + Math.random() * 0.8);
     const launchX = launchTargetX - originX;
     const launchY = -boardBounds.height * (0.55 + Math.random() * 0.45);
-    const fallX = launchX + (Math.random() - 0.5) * boardBounds.width * 0.22;
+    const fallX = launchX + (Math.random() - 0.5) * window.innerWidth * 0.3;
     const fallEndY = Math.max(
       originY + 20,
       Math.min(
