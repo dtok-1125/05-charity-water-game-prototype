@@ -200,9 +200,22 @@ function movePlayer(direction) {
 }
 
 movementButtons.forEach(function (button) {
-  button.addEventListener("click", function () {
-    movePlayer(button.dataset.direction);
-  });
+  if ("PointerEvent" in window) {
+    button.addEventListener("pointerdown", function () {
+      movePlayer(button.dataset.direction);
+    });
+
+    button.addEventListener("click", function (event) {
+      // Keep native keyboard and assistive-technology button activation working.
+      if (event.detail === 0) {
+        movePlayer(button.dataset.direction);
+      }
+    });
+  } else {
+    button.addEventListener("click", function () {
+      movePlayer(button.dataset.direction);
+    });
+  }
 });
 
 // Listen for arrow keys
