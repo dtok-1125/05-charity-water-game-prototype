@@ -91,6 +91,7 @@ function updateTimerDisplay() {
 }
 
 function showOverlay(title, message, showRestartButton = false) {
+  stopMovement();
   overlayTitle.textContent = title;
   overlayMessage.textContent = message;
   restartButton.hidden = !showRestartButton;
@@ -166,8 +167,19 @@ let playerY = 80;
 
 // Movement speed (percentage per key press)
 const playerSpeed = 2;
+const movementIntervalDelay = 160;
 
 const movementButtons = document.querySelectorAll(".arrow-key");
+let activeDirection = null;
+let movementInterval = null;
+
+function stopMovement(direction) {
+  if (direction && activeDirection !== direction) return;
+
+  clearInterval(movementInterval);
+  movementInterval = null;
+  activeDirection = null;
+}
 
 // Move the player from either the keyboard or the on-screen controls.
 function movePlayer(direction) {
@@ -198,10 +210,44 @@ function movePlayer(direction) {
   checkObstacleCollision();
 }
 
+function startMovement(direction) {
+  if (gameScreen.hidden || gamePaused || gameEnded) return;
+  if (activeDirection === direction) return;
+
+  stopMovement();
+  activeDirection = direction;
+  movePlayer(direction);
+
+  // A move can open an overlay, which stops movement immediately.
+  if (activeDirection !== direction) return;
+
+  movementInterval = window.setInterval(function () {
+    if (gameScreen.hidden || gamePaused || gameEnded || !gameOverlay.hidden) {
+      stopMovement();
+      return;
+    }
+
+    movePlayer(direction);
+  }, movementIntervalDelay);
+}
+
 movementButtons.forEach(function (button) {
   if ("PointerEvent" in window) {
-    button.addEventListener("pointerdown", function () {
-      movePlayer(button.dataset.direction);
+    button.addEventListener("pointerdown", function (event) {
+      event.preventDefault();
+      startMovement(button.dataset.direction);
+    });
+
+    button.addEventListener("pointerup", function () {
+      stopMovement(button.dataset.direction);
+    });
+
+    button.addEventListener("pointercancel", function () {
+      stopMovement(button.dataset.direction);
+    });
+
+    button.addEventListener("pointerleave", function () {
+      stopMovement(button.dataset.direction);
     });
 
     button.addEventListener("click", function (event) {
@@ -215,6 +261,14 @@ movementButtons.forEach(function (button) {
       movePlayer(button.dataset.direction);
     });
   }
+});
+
+window.addEventListener("blur", function () {
+  stopMovement();
+});
+
+document.addEventListener("visibilitychange", function () {
+  if (document.hidden) stopMovement();
 });
 
 // Listen for arrow keys
@@ -234,7 +288,19 @@ document.addEventListener("keydown", function (event) {
 
   // Stop arrow keys from scrolling the page
   event.preventDefault();
-  movePlayer(direction);
+  if (!event.repeat) startMovement(direction);
+});
+
+document.addEventListener("keyup", function (event) {
+  const directions = {
+    ArrowUp: "up",
+    ArrowDown: "down",
+    ArrowLeft: "left",
+    ArrowRight: "right"
+  };
+  const direction = directions[event.key];
+
+  if (direction) stopMovement(direction);
 });
 
 /* =================================
@@ -262,6 +328,7 @@ const obstaclesInContact = new Set();
 let carryingWater = false;
 
 function resetGame() {
+  stopMovement();
   clearInterval(timerInterval);
   timerInterval = null;
   clearTimeout(obstacleTimeout);
