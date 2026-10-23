@@ -740,8 +740,8 @@ clip-path: inset(0 0 0 12%);
   }
 
   #player {
-    width: clamp(27px, 8.5vw, 35px);
-    height: clamp(27px, 8.5vw, 35px);
+    width: clamp(21.6px, 6.8vw, 28px);
+    height: clamp(21.6px, 6.8vw, 28px);
   }
 
   .obstacle {
